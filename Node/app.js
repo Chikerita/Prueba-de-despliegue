@@ -1,14 +1,15 @@
 const mongo = require('mongodb');
 const express = require('express');
 const appServer = express();
+const PORT = process.env.PORT || 3000;
+
 appServer.use(express.json());
 
 var MongoClient = mongo.MongoClient;
 var url = "mongodb://localhost:27017";
 
-
-appServer.listen(3000, () => {
-    console.log('SERVER IS RUNING IN PORT 3000');
+appServer.listen(PORT, () => {
+    console.log("SERVER IS LISTEN ON PORT:" , PORT);
 });
 
 appServer.get('/get', (req, res) => {
@@ -24,7 +25,6 @@ appServer.put('/put', (req, res) => {
     });
     res.send('Cuestionario recibido');
 });
-
 
 appServer.get('/getp', (req, res) => {
     MongoClient.connect(url, function (err, client) {
