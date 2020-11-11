@@ -14,7 +14,8 @@ appServer.listen(PORT, () => {
 
 appServer.get('/get', async (req, res) => {
     const results = await findQuestionarys(MongoClient);
-    res.send(results[0].content);
+    res.send(results);
+    console.log("Respuesta enviada");
 });
 
 async function findQuestionarys(client) {
@@ -26,15 +27,6 @@ async function findQuestionarys(client) {
         };
         const cursor = client.db("mydb").collection('CuestionariosPublicos').find({}, options);
         const results = await cursor.toArray();
-        console.log(results[0].content);
-        if (results.length > 0) {
-            console.log('Questionarys: ');
-            results.forEach((result, i) => {
-                console.log(`${result.content}`);
-            });
-        } else {
-            console.log('No found');
-        }
         return results;
     } catch (e) {
         console.error(e);
@@ -43,6 +35,23 @@ async function findQuestionarys(client) {
     }
 }
 
+appServer.put('/put', async (req, res) => {
+    addQuestionary(MongoClient, req.body);
+    res.send("Cuestionario agregado");
+});
+
+async function addQuestionary(client, questionary){
+    try {
+        await client.connect();
+        const result = await client.db("mydb").collection('CuestionariosPublicos').insertOne(questionary);
+    } catch (e) {
+        console.error(e);
+    } finally {
+        await client.close();
+    }
+}
+
+/*
 appServer.put('/put', (req, res) => {
     MongoClient.connect(url, function (err, client) {
         if (err) throw err;
@@ -51,20 +60,4 @@ appServer.put('/put', (req, res) => {
         client.close();
     });
     res.send('Cuestionario recibido');
-});
-
-appServer.get('/getp', (req, res) => {
-    MongoClient.connect(url, function (err, client) {
-        if (err) throw err;
-        var db = client.db("mydb");
-        const options = {
-            sort: {},
-            projection: { _id: 0},
-        };
-        db.collection('CuestionariosPublicos').find({}, options).toArray(function (err, result){
-            if (err) throw err;
-            res.send(result);
-            client.close();
-        });
-    });
-});
+});*/
