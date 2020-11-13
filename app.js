@@ -50,14 +50,3 @@ async function addQuestionary(client, questionary){
         await client.close();
     }
 }
-
-/*
-appServer.put('/put', (req, res) => {
-    MongoClient.connect(url, function (err, client) {
-        if (err) throw err;
-        var db = client.db("mydb");
-        db.collection('CuestionariosPublicos').insertOne(req.body);
-        client.close();
-    });
-    res.send('Cuestionario recibido');
-});*/
